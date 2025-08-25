@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Certificate Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+  <h1>Admin Panel - Issue Certificate</h1>
+
+  <div id="loginDiv">
+    <h2>Admin Login</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div id="adminDiv" style="display:none;">
+    <h2>Issue Certificate</h2>
+    <input type="text" id="name" placeholder="Recipient Name">
+    <input type="text" id="course" placeholder="Course/Program">
+    <button onclick="issueCertificate()">Generate Certificate</button>
+
+    <h2>Generated QR Code</h2>
+    <canvas id="qrCanvas"></canvas>
+
+    <br><br>
+    <button onclick="window.location.href='verify.html'">Go to Verify Page</button>
+  </div>
+
+  <script src="firebase.js"></script>
+  <script src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</body>
+</html>
