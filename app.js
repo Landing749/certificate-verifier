@@ -1,39 +1,49 @@
-function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+document.addEventListener("DOMContentLoaded", () => {
 
-  auth.signInWithEmailAndPassword(email, password)
-    .then(() => {
-      document.getElementById("loginDiv").style.display = "none";
-      document.getElementById("adminDiv").style.display = "block";
-    })
-    .catch(err => alert("Login Failed: " + err.message));
-}
+  const form = document.getElementById("certForm");
+  const qrCanvas = document.getElementById("qrcode");
 
-function issueCertificate() {
-  const name = document.getElementById("name").value;
-  const course = document.getElementById("course").value;
-  const issuedOn = Date.now().toString();
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  if (!name || !course) {
-    alert("Please fill all fields.");
-    return;
-  }
+    const name = document.getElementById("name").value;
+    const course = document.getElementById("course").value;
 
-  const certId = issuedOn;
+    if (!name || !course) {
+      alert("Please fill out all fields.");
+      return;
+    }
 
-  db.collection("certificates").doc(certId).set({
-    name,
-    course,
-    issuedOn
-  }).then(() => {
-    const verifyURL = `https://Landing749.github.io/certificate-verifier/verify.html?id=${certId}`;
-    QRCode.toCanvas(document.getElementById("qrCanvas"), verifyURL, function (error) {
-      if (error) console.error(error);
-      console.log("QR code generated!");
-    });
-    alert("✅ Certificate issued successfully!");
-  }).catch(err => {
-    alert("Error: " + err.message);
+    const certId = Date.now().toString(); // unique ID
+
+    try {
+      // Save certificate to Firestore
+      await db.collection("certificates").doc(certId).set({
+        name,
+        course,
+        issuedOn: Date.now()
+      });
+
+      // QR code URL pointing to verify.html?id=certId
+      const qrData = `${window.location.origin}/verify.html?id=${certId}`;
+
+      // Generate QR code
+      QRCode.toCanvas(qrCanvas, qrData, { width: 200 }, (error) => {
+        if (error) {
+          console.error("QR Code generation error:", error);
+          alert("Error generating QR Code");
+        } else {
+          console.log("QR Code generated successfully!");
+        }
+      });
+
+      form.reset();
+      alert("✅ Certificate added and QR code generated!");
+
+    } catch (err) {
+      console.error(err);
+      alert("Error: " + err.message);
+    }
   });
-}
+
+});
