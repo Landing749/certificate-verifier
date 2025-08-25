@@ -27,7 +27,7 @@ function issueCertificate() {
     course,
     issuedOn
   }).then(() => {
-    const verifyURL = `https://USERNAME.github.io/certificate-verifier/verify.html?id=${certId}`;
+    const verifyURL = `https://Landing749.github.io/certificate-verifier/verify.html?id=${certId}`;
     QRCode.toCanvas(document.getElementById("qrCanvas"), verifyURL, function (error) {
       if (error) console.error(error);
       console.log("QR code generated!");
